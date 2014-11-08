@@ -38,7 +38,7 @@ public class ParseYelp {
 			    String business_id = jobject.get("business_id").toString();
 				String name = jobject.get("name").toString(); 
 				if ( categories.contains( new JsonParser().parse("Restaurants")) ){
-			    	System.out.println("This buisiness: " + name + " is a restaurant");
+			    	//System.out.println("This buisiness: " + name + " is a restaurant");
 			    	ids.put(business_id, name);
 			    }
 				//ittrs--;
@@ -66,23 +66,22 @@ public class ParseYelp {
 				        count.increment();
 				    }   
 			    }	    
-			    ittrs--;
+			    //ittrs--;
 			}
-			
 			
 			int total_reviews = 0;
 			for (String key : freq.keySet()){
-				System.out.println("there are "+ freq.get(key).value + " funny reviews with number of votes: " + key);
+				//System.out.println("there are "+ freq.get(key).value + " funny reviews with number of votes: " + key);
+				System.out.println( key + " , " + freq.get(key).value);
 				total_reviews += freq.get(key).value;
 			}
 			
-			Collections.sort(data);
+			/*Collections.sort(data);
 			for(ReviewJ r : data){
-				if ( r.funnyVotes > 5){
-					System.out.println(r.funnyVotes);
-					System.out.println(r.getText());
+				if ( r.funnyVotes > 10){
+					System.out.println("(" + r.funnyVotes + ")" + r.getText());
 				}
-			}
+			}*/
 	    
 		} catch (Exception e){
 			e.printStackTrace();
