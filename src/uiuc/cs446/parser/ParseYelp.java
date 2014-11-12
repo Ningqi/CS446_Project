@@ -7,8 +7,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +29,9 @@ public class ParseYelp {
 			//TODO: need to hash the business values before so we can check the Ids to add to categories.
 			FileReader business = new FileReader("data/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json");
 			BufferedReader bb = new BufferedReader(business);
+			BufferedWriter br = new BufferedWriter(new FileWriter("data/funny_reviews.txt"));
+
+			BufferedWriter br2 = new BufferedWriter(new FileWriter("data/not_funny_reviews.txt"));
 			
 			String line;
 			int ittrs = 11;
@@ -55,7 +60,7 @@ public class ParseYelp {
 			    
 			    if(ids.containsKey(business_id)){
 			    	// Restaurant Review
-			    	ReviewJ temp = new ReviewJ(reviewText, Integer.valueOf(funnyVotes), Integer.valueOf(helpfulVotes),null);
+			    	ReviewJ temp = new ReviewJ(reviewText, Integer.valueOf(funnyVotes), Integer.valueOf(helpfulVotes),null, "unknown");
 				    data.add(temp);
 				    // counting distribuion of funny text
 				    MutableInt count = freq.get(funnyVotes);
@@ -71,18 +76,25 @@ public class ParseYelp {
 			
 			int total_reviews = 0;
 			for (String key : freq.keySet()){
-				//System.out.println("there are "+ freq.get(key).value + " funny reviews with number of votes: " + key);
-				System.out.println( key + " , " + freq.get(key).value);
+				System.out.println("there are "+ freq.get(key).value + " funny reviews with number of votes: " + key);
 				total_reviews += freq.get(key).value;
 			}
 			
-			/*Collections.sort(data);
+			System.out.println("total number of reviews: " + total_reviews);
+			Collections.sort(data);
 			for(ReviewJ r : data){
 				if ( r.funnyVotes > 10){
-					System.out.println("(" + r.funnyVotes + ")" + r.getText());
+					br.write( r.getText() + "\n");
 				}
-			}*/
+				else if ( r.funnyVotes == 0){
+					br2.write( r.getText() + "\n");
+				}
+			}
 	    
+			bb.close();
+			bf.close();
+			br.close();
+			br2.close();
 		} catch (Exception e){
 			e.printStackTrace();
 		}

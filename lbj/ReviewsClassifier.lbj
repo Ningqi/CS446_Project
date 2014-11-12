@@ -1,0 +1,39 @@
+package uiuc.cs446.parser;
+
+import java.util.List;
+
+/** Simply produces "word" features. */
+discrete% WordFeatures(ReviewJ review) <- {
+	List words = review.getWords();
+    for (int i = 0; i < words.size(); i++)
+		sense words.get(i);
+}
+
+discrete ReviewLabel(ReviewJ d) <- { return d.getLabel(); }
+
+/** A learned badge classifier; its definition comes from data. */
+discrete ReviewsClassifier(ReviewJ review) <-
+learn ReviewLabel
+  using WordFeatures
+  from new ReviewDataReader("data/funny_reviews.txt", "data/not_funny_reviews.txt")
+  5 rounds
+
+  //with SparseAveragedPerceptron {
+  //  learningRate = 0.1 ;
+  //  thickness = 3.5;
+  //}
+  with SparseNetworkLearner {
+  SparseAveragedPerceptron.Parameters p =
+       new SparseAveragedPerceptron.Parameters();
+     p.learningRate = 0.05;
+     p.thickness = 5;
+     baseLTU = new SparseAveragedPerceptron(p);
+  }
+  
+
+  cval 5 "random"
+  //testFrom new BadgeDataReader("data/badges/badges.test")
+ 
+  progressOutput 2000
+end
+
