@@ -11,17 +11,13 @@ discrete% WordFeatures(ReviewJ review) <- {
 
 discrete ReviewLabel(ReviewJ d) <- { return d.getLabel(); }
 
-/** A learned badge classifier; its definition comes from data. */
+/** A learned review classifier; its definition comes from data. */
 discrete ReviewsClassifier(ReviewJ review) <-
 learn ReviewLabel
   using WordFeatures
-  from new ReviewDataReader("data/funny_reviews.txt", "data/not_funny_reviews.txt")
+  from new ReviewDataReader("data/funny_reviews_training.txt", "data/not_funny_reviews_training.txt")
   5 rounds
 
-  //with SparseAveragedPerceptron {
-  //  learningRate = 0.1 ;
-  //  thickness = 3.5;
-  //}
   with SparseNetworkLearner {
   SparseAveragedPerceptron.Parameters p =
        new SparseAveragedPerceptron.Parameters();
@@ -30,10 +26,8 @@ learn ReviewLabel
      baseLTU = new SparseAveragedPerceptron(p);
   }
   
+  //testFrom ReviewDataReader("data/funny_reviews_testing.txt", "data/not_funny_reviews_testing.txt") 
 
-  cval 5 "random"
-  //testFrom new BadgeDataReader("data/badges/badges.test")
- 
   progressOutput 2000
 end
 
