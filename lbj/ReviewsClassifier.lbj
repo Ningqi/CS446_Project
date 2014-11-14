@@ -26,7 +26,7 @@ learn ReviewLabel
      baseLTU = new SparseAveragedPerceptron(p);
   }
   
-  //testFrom ReviewDataReader("data/funny_reviews_testing.txt", "data/not_funny_reviews_testing.txt") 
+  testFrom new ReviewDataReader("data/funny_reviews_testing.txt","data/not_funny_reviews_testing.txt") 
 
   progressOutput 2000
 end
