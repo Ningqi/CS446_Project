@@ -11,7 +11,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	private int helpfulVotes;
 	private ArrayList<String> categories;
 	private String label; 
-	
+	private String userId;
 	public int funnyVotes;
 	
 	/*
@@ -29,20 +29,22 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		this.funnyVotes = -1;
 		this.helpfulVotes = -1;
 		this.categories = null;
+		this.userId = null;
 	}
 	
-	public ReviewJ(String body, int fvotes, int hvotes, ArrayList<String> cat, String l){
+	public ReviewJ(String body, int fvotes, int hvotes, ArrayList<String> cat, String l, String id){
 		this.setText(new String(body));
 		this.funnyVotes = fvotes;
 		this.helpfulVotes = hvotes;
 		this.categories = cat;
 		this.label = l;
+		this.userId = id;
 	}
 	
 	public static void main(String[] args){
-		ReviewJ temp1 = new ReviewJ("temp1", 0, 0, null, "positive");
-		ReviewJ temp2 = new ReviewJ("temp2", 1, 2, null, "positive");
-		ReviewJ temp3 = new ReviewJ("temp2", 3, 2, null, "positive");
+		ReviewJ temp1 = new ReviewJ("temp1", 0, 0, null, "positive", "abc");
+		ReviewJ temp2 = new ReviewJ("temp2", 1, 2, null, "positive", "abcd");
+		ReviewJ temp3 = new ReviewJ("temp2", 3, 2, null, "positive", "abd");
 		
 		ArrayList<ReviewJ> data = new ArrayList<ReviewJ>();
 		data.add(temp1);
@@ -63,6 +65,18 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 
 	public String getText() {
 		return text;
+	}
+	
+	public String getUserId(){
+		return this.userId;
+	}
+	
+	public int getFvotes(){
+		return this.funnyVotes;
+	}
+	
+	public int getHelpfulVotes(){
+		return this.helpfulVotes;
 	}
 	
 	public List<String> getWords(){
