@@ -1,6 +1,7 @@
 package uiuc.cs446.parser;
 
 import java.util.List;
+import java.util.ArrayList;
 
 /** Simply produces "word" features. */
 discrete% WordFeatures(ReviewJ review) <- {
@@ -9,13 +10,47 @@ discrete% WordFeatures(ReviewJ review) <- {
 		sense words.get(i);
 }
 
+discrete% LengthFeatures(ReviewJ review) <- {
+    List words = review.getWords();
+    if (words.size() <= 100)
+		sense words.size();
+    else
+		sense 100;
+}
+
+discrete% AvgLengthFeatures(ReviewJ review) <- {
+    List words = review.getWords();
+    int sum = 0;
+    for (int i = 0; i < words.size(); i++){
+    	String word = (String) words.get(i);
+    	sum += word.length();
+    }
+    sense sum/words.size();
+}
+
+discrete% LetterLengthFeatures(ReviewJ review) <- {
+    List words = review.getWords();
+    int letterSum = 0;
+    int lengthSum = 0;
+    for (int i = 0; i < words.size(); i++){
+    	String word = (String) words.get(i);
+    	for (int j = 0; j < word.length(); j ++){
+    		char c = word.charAt(j);
+    		if (('a'<= c && c <='z') || ('A' <= c && c <= 'Z'))
+    			letterSum += 1;
+    	}
+    	lengthSum += word.length();
+    }
+    sense letterSum/lengthSum;
+}
+
 discrete ReviewLabel(ReviewJ d) <- { return d.getLabel(); }
 
 /** A learned review classifier; its definition comes from data. */
 discrete ReviewsClassifier(ReviewJ review) <-
 learn ReviewLabel
-  using WordFeatures
-  from new ReviewDataReader("data/funny_reviews_training.txt", "data/not_funny_reviews_training.txt")
+  using LetterLengthFeatures
+  from new ReviewDataReader("data/funny_reviews_training.txt", "data/not_funny_small_training.txt")
   5 rounds
 
   with SparseNetworkLearner {
@@ -26,7 +61,7 @@ learn ReviewLabel
      baseLTU = new SparseAveragedPerceptron(p);
   }
   
-  testFrom new ReviewDataReader("data/funny_reviews_testing.txt","data/not_funny_reviews_testing.txt") 
+  testFrom new ReviewDataReader("data/funny_reviews_testing.txt", "data/not_funny_small_testing.txt") 
 
   progressOutput 2000
 end
