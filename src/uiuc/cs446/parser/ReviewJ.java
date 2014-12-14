@@ -1,6 +1,7 @@
 package uiuc.cs446.parser;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.*;
@@ -12,6 +13,11 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	private ArrayList<String> categories;
 	private String label; 
 	private String userId;
+	private String businessId;
+	private int score;
+	private String time;
+	private String userStat;
+	private String businessStat;
 	public int funnyVotes;
 	
 	/*
@@ -32,26 +38,53 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		this.userId = null;
 	}
 	
-	public ReviewJ(String body, int fvotes, int hvotes, ArrayList<String> cat, String l, String id){
+	public ReviewJ(String body, int fvotes, int hvotes, ArrayList<String> cat, String l, String uid, String bid, int score, String time){
 		this.setText(new String(body));
 		this.funnyVotes = fvotes;
 		this.helpfulVotes = hvotes;
 		this.categories = cat;
 		this.label = l;
-		this.userId = id;
+		this.userId = uid;
+		this.businessId = bid;
+		this.score = score;
+		this.time = time;
+	}
+	
+	public ReviewJ(String body, String l, int helpfulVotes, String userId, String uStat, String bid, String bStat, String time){
+		this.setText(new String(body));
+		this.label = l;
+		this.helpfulVotes = helpfulVotes;
+		this.userId = userId;
+		this.userStat = uStat;
+		this.businessId = bid;
+		this.businessStat = bStat;
+		this.time = time;
 	}
 	
 	public static void main(String[] args){
-		ReviewJ temp1 = new ReviewJ("temp1", 0, 0, null, "positive", "abc");
-		ReviewJ temp2 = new ReviewJ("temp2", 1, 2, null, "positive", "abcd");
-		ReviewJ temp3 = new ReviewJ("temp2", 3, 2, null, "positive", "abd");
+		ReviewJ temp1 = new ReviewJ("temp1, I dont like this.", 0, 0, null, "positive", "abc", "zxc", 4, "2014-07-16");
+		ReviewJ temp2 = new ReviewJ("temp2m haha, haha, ha", 0, 2, null, "positive", "abc", "zxc", 2, "2014-05-17");
+		ReviewJ temp3 = new ReviewJ("temp2this is crazy!!!!, I can believe I bought this!", 6, 2, null, "positive", "abd", "jks", 2, "2014-06-14");
 		
 		ArrayList<ReviewJ> data = new ArrayList<ReviewJ>();
 		data.add(temp1);
 		data.add(temp2);
 
 		data.add(temp3);
-		for(ReviewJ rj : data){
+		/*ReviewStat st = new ReviewStat(data);
+		HashMap<String, String> map = st.getAvgScoreAndStd(1);
+		for (String k : map.keySet()){
+			System.out.println(k + ":" + map.get(k));
+		}*/
+		ParseYelp.writeToCSV(data);
+		ReviewDataReader rd = new ReviewDataReader("data/funny_exp.csv", "data/not_funny_exp.csv");
+		List<ReviewJ> reviews = rd.getReviews();
+		System.out.println("here:" + reviews.size());
+		for (ReviewJ r : reviews){
+			System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
+					+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
+		}
+		/*for(ReviewJ rj : data){
 			System.out.println(rj.funnyVotes);
 		}
 		Collections.sort(data);
@@ -59,7 +92,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		System.out.println("sorted:");
 		for(ReviewJ rj : data){
 			System.out.println(rj.funnyVotes);
-		}
+		}*/
 		
 	}
 
@@ -67,6 +100,16 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		return text;
 	}
 	
+	public String getBid(){
+		return businessId;
+	}
+	
+	public int getScore(){
+		return this.score;
+	}
+	public String getTime(){
+		return this.time;
+	}
 	public String getUserId(){
 		return this.userId;
 	}
@@ -79,6 +122,12 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		return this.helpfulVotes;
 	}
 	
+	public String getUserStat(){
+		return this.userStat;
+	}
+	public String getBusinessStat(){
+		return this.businessStat;
+	}
 	public List<String> getWords(){
 		List<String> words = new ArrayList<String>();
 		for (String word : text.split("\\s+"))

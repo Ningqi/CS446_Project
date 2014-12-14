@@ -18,19 +18,55 @@ public class ReviewDataReader implements Parser {
      * 
      */
     public ReviewDataReader(String funnyRevs, String notFunnyRevs) {
+    	
         lines = new ArrayList<ReviewJ>();
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(funnyRevs)));
             String str = br.readLine();
-            while (str != null) {
-            	lines.add(new ReviewJ(str, "funny" ));
+            str = br.readLine();
+    		while (str != null) {
+            	//System.out.println("funny:" + str);
+            	String[] temp = str.split(",");
+            	int l = temp.length; 
+    			String time = temp[l-1];
+    			String bStat = temp[l-3] + "," + temp[l-2];
+    			String bid = temp[l-4];
+    			String uStat = temp[l-6] + "," + temp[l-5];
+    			String uid = temp[l-7];
+    			int hvotes = Integer.parseInt(temp[l-8]);
+
+    			StringBuffer s = new StringBuffer();
+    			for (int i = 0; i <= l-9; i ++){
+    				s.append(temp[i]);
+    			}
+    			String review = s.toString();
+    			ReviewJ r = new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time);
+    			lines.add(r);
+    			System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
+    					+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
+            	/*lines.add(new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time));*/
             	str = br.readLine();
             }
             br.close();
             br = new BufferedReader(new InputStreamReader(new FileInputStream(notFunnyRevs)));
             str = br.readLine();
+            str = br.readLine();
             while (str != null) {
-            	lines.add(new ReviewJ(str, "notFunny" ));
+            	//System.out.println("not funny:" + str);
+            	String[] temp = str.split(",");
+            	int l = temp.length; 
+    			String time = temp[l-1];
+    			String bStat = temp[l-3] + "," + temp[l-2];
+    			String bid = temp[l-4];
+    			String uStat = temp[l-6] + "," + temp[l-5];
+    			String uid = temp[l-7];
+    			int hvotes = Integer.parseInt(temp[l-8]);
+    			StringBuffer s = new StringBuffer();
+    			for (int i = 0; i <= l-9; i ++){
+    				s.append(temp[i]);
+    			}
+    			String review = s.toString();
+            	lines.add(new ReviewJ(review, "notFunny", hvotes, uid, uStat, bid, bStat, time ));
             	str = br.readLine();
             }
             br.close();
@@ -42,6 +78,9 @@ public class ReviewDataReader implements Parser {
     public void close() {
     }
     
+    public List<ReviewJ> getReviews(){
+    	return this.lines;
+    }
     public Object next() {
         
         if (currentline == lines.size()) {
