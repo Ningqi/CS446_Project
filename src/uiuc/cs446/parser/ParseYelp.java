@@ -88,9 +88,9 @@ public class ParseYelp {
 				if ( r.funnyVotes > ParseYelp.MINFUNNYVOTES){
 					br.write( r.getText() + "\n");
 				}
-				//else if ( r.funnyVotes == 0){
-				//	br2.write( r.getText() + "\n");
-				//}
+				else if ( r.funnyVotes == 0){
+					br2.write( r.getText() + "\n");
+				}
 			}
 	    
 			bb.close();

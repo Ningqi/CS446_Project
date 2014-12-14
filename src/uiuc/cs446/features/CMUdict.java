@@ -119,7 +119,9 @@ public class CMUdict
 	public List<String> getPronunciations(String word){
 		//return  (List<String>) dict.get(word.toUpperCase());
 		@SuppressWarnings("unchecked")
-		String line = ((List<String>) dict.get(word.toUpperCase())).get(0);
+		List<String> ret = ((List<String>)dict.get(word.toUpperCase()));
+		if(ret == null) return null;
+		String line = ret.get(0);
 		List<String> wordArrayList = new ArrayList<String>();
 		for(String w : line.split("\\s+")) {
 		    wordArrayList.add(w);
