@@ -39,7 +39,7 @@ def main(args):
 		print "Need at least one arguement"
 		return 0
 		
-	fraction = 0.1
+	fraction = 0.2
 	outputfile = "output_sample.txt"
 	outputdisj = "output_cleaned.txt"
 	print "arguments:"
@@ -55,7 +55,7 @@ def main(args):
 	
 	sampleFiles = random.sample(lines, sampleSize)
 	print sampleFiles[0]
-	
+	sys.exit(0)
 	with open(outputfile, 'w') as f:
 		f.writelines(sampleFiles)
 	
@@ -75,8 +75,6 @@ def cross_validation(args):
 	folds = 5
 	funny=args[0]
 	notfunny=args[1]
-<<<<<<< HEAD
-=======
 
 	init_funny = []
 	init_notfunny = []
@@ -128,59 +126,5 @@ def k_fold_cross_validation(items, k, randomize=False):
 		
 
 if __name__ == '__main__':
-	#main(sys.argv[1:])
-	cross_validation(sys.argv[1:])
->>>>>>> c753136b732d03713789e63571088a3115041629
-
-	init_funny = []
-	init_notfunny = []
-
-	with open(funny) as f:
-		funny_conts = f.readlines()
-		init_funny = random.sample(funny_conts, SAMPLE )
-	
-	with open(notfunny) as f:
-		notfunny_conts = f.readlines()
-		init_notfunny = random.sample(notfunny_conts, SAMPLE )
-
-	sampleSize = (int) (len(init_funny) * (1.0/(1.0*folds)))
-	
-	funny_training = path_to_cv_output+"funny_training_sample_"
-	notfunny_training= path_to_cv_output+"notfunny_training_sample_"
-	funny_testing = path_to_cv_output+"funny_testing_sample_"
-	notfunny_testing = path_to_cv_output+"notfunny_testing_sample_"
-
-	i = 0
-	for funny_t, funny_v in k_fold_cross_validation(init_funny, folds):
-		i = i + 1
-		with open(funny_training + str(i) + ".txt", 'w') as f:
-			f.writelines(funny_t)
-			
-		with open(funny_testing + str(i) + ".txt", 'w') as f:
-			f.writelines(funny_v)
-
-	i = 0
-	for notfunny_t, notfunny_v in k_fold_cross_validation(init_notfunny, folds):
-		i = i + 1
-		with open(notfunny_training + str(i) + ".txt", 'w') as f:
-			f.writelines(notfunny_t)
-			
-		with open(notfunny_testing + str(i) + ".txt", 'w') as f:
-			f.writelines(notfunny_v)
-	
-def k_fold_cross_validation(items, k, randomize=False):
-	if randomize:
-		items = list(items)
-		random.shuffle(items)
-
-	slices = [items[i::k] for i in xrange(k)]
-
-	for i in xrange(k):
-		validation = slices[i]
-		training = [item for s in slices if s is not validation for item in s]
-		yield training, validation	
-		
-
-if __name__ == '__main__':
-	#main(sys.argv[1:])
-	cross_validation(sys.argv[1:])
+	main(sys.argv[1:])
+	#cross_validation(sys.argv[1:])
