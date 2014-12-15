@@ -4,13 +4,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import uiuc.cs446.features.StructureFunnyFeatures;
+
 import com.google.gson.*;
 
 public final class ReviewJ implements Comparable<ReviewJ>{
-
+	private static final StructureFunnyFeatures sff = new StructureFunnyFeatures();
 	private String text;
 	private int helpfulVotes;
-	private ArrayList<String> categories;
+	private ArrayList<String> sentences; // TODO: need to find a good way to split on sentences.
 	private String label; 
 	private String userId;
 	private String businessId;
@@ -34,7 +36,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		this.label = l;
 		this.funnyVotes = -1;
 		this.helpfulVotes = -1;
-		this.categories = null;
+		this.sentences = null;
 		this.userId = null;
 	}
 	
@@ -42,7 +44,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		this.setText(new String(body));
 		this.funnyVotes = fvotes;
 		this.helpfulVotes = hvotes;
-		this.categories = cat;
+		this.sentences = cat;
 		this.label = l;
 		this.userId = uid;
 		this.businessId = bid;
