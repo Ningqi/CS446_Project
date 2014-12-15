@@ -23,8 +23,8 @@ import java.util.Map;
 public class ParseYelp {
 	public static final int MINFUNNYVOTES=5;
 	public static void main(String[] args){
-		ArrayList<ReviewJ> data = new ArrayList<ReviewJ>();
-		Map<String, MutableInt> freq = new HashMap<String, MutableInt>();
+		ArrayList<ReviewJ> data = new ArrayList<ReviewJ>(1300000);
+		//Map<String, MutableInt> freq = new HashMap<String, MutableInt>();
 		//Map<String, String> ids = new HashMap<String, String>();
 		try{ 
 			InputStreamReader reader = new InputStreamReader( new FileInputStream ( "data/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json"), "UTF8");
@@ -36,59 +36,61 @@ public class ParseYelp {
 			//BufferedWriter br2 = new BufferedWriter(new FileWriter("data/not_funny_reviews_5.txt"));
 			
 			String line;
-			int ittrs = 11;
+			//int ittrs = 11;
 			
-			/*while( ittrs > 0 && (line = bb.readLine()) != null){
-				JsonElement jelement = new JsonParser().parse(line);
-				JsonObject jobject = jelement.getAsJsonObject();
-				JsonArray categories = jobject.getAsJsonArray("categories");
-			    String business_id = jobject.get("business_id").toString();
-				String name = jobject.get("name").toString(); 
-				if ( categories.contains( new JsonParser().parse("Restaurants")) ){
-			    	//System.out.println("This buisiness: " + name + " is a restaurant");
-			    	ids.put(business_id, name);
-			    }
-				//ittrs--;
-			}*/
 			int cnt = 0;
-			while (ittrs > 0 && (line = bf.readLine()) != null && cnt < 100000){
+			
+			JsonObject  jobject = null;
+		    JsonObject votes;
+		    int funnyVotes;
+		    String helpfulVotes;
+		    String reviewText;
+		    String business_id;
+		    int score;
+		    String time;
+		    String user_id;
+			
+			while (/*ittrs > 0 &&*/ (line = bf.readLine()) != null /*&& cnt < 100000*/){
 				JsonElement jelement = new JsonParser().parse(line);
-			    JsonObject  jobject = jelement.getAsJsonObject();
-			    JsonObject votes = jobject.getAsJsonObject("votes");
-			    String funnyVotes = votes.get("funny").toString();
-			    String helpfulVotes = votes.get("useful").toString();
-			    String reviewText = jobject.get("text").toString();
-			    String business_id = jobject.get("business_id").toString();
-			    int score = Integer.parseInt(jobject.get("stars").toString());
-			    String time = jobject.get("date").toString();
-			    String user_id = jobject.get("user_id").toString();
+			    jobject = jelement.getAsJsonObject();
+			    votes = jobject.getAsJsonObject("votes");
+			    funnyVotes = Integer.valueOf(votes.get("funny").toString());
+			    helpfulVotes = votes.get("useful").toString();
+			    reviewText = jobject.get("text").toString();
+			    business_id = jobject.get("business_id").toString();
+			    score = Integer.parseInt(jobject.get("stars").toString());
+			    time = jobject.get("date").toString();
+			    user_id = jobject.get("user_id").toString();
 			    //if(ids.containsKey(business_id)){
 			    	// Restaurant Review
-			    	ReviewJ temp = new ReviewJ(reviewText, Integer.valueOf(funnyVotes), Integer.valueOf(helpfulVotes),null, "unknown", user_id,
-			    			business_id, score, time);
-				    data.add(temp);
+			    	//ReviewJ temp = new ReviewJ(reviewText, Integer.valueOf(funnyVotes), Integer.valueOf(helpfulVotes),null, "unknown", user_id,
+			    	//		business_id, score, time);
+			    if (funnyVotes > ParseYelp.MINFUNNYVOTES || funnyVotes == 0)
+				    data.add(new ReviewJ(reviewText, funnyVotes, Integer.valueOf(helpfulVotes),null, "unknown", user_id,
+			    			business_id, score, time));
 				    // counting distribuion of funny text
-				    MutableInt count = freq.get(funnyVotes);
-				    if (count == null) {
-				        freq.put(funnyVotes, new MutableInt());
-				    }
-				    else {
-				        count.increment();
-				    }   
+				    //MutableInt count = freq.get(funnyVotes);
+				    //if (count == null) {
+				    //    freq.put(funnyVotes, new MutableInt());
+				    //}
+				    //else {
+				    //    count.increment();
+				    //}   
 			    //}	    
 			    //ittrs--;
 				    cnt ++;
-				    if (cnt%10000 == 0)
+				    //if (cnt%10000 == 0)
 				    	System.out.println(cnt);
 			}
 			
-			int total_reviews = 0;
-			for (String key : freq.keySet()){
-				System.out.println( key + ", there are:"+ freq.get(key).value );
-				total_reviews += freq.get(key).value;
-			}
+			//int total_reviews = 0;
+			//for (String key : freq.keySet()){
+			//	System.out.println( key + ", there are:"+ freq.get(key).value );
+			//	total_reviews += freq.get(key).value;
+			//}
 			
-			System.out.println("total number of reviews: " + total_reviews);
+			//System.out.println("total number of reviews: " + total_reviews);
+			System.out.println("sorting ...");
 			Collections.sort(data);
 
 			//TODO: write everything into CSV format. Review, funny/not, helpful/not, user_id
@@ -116,8 +118,8 @@ public class ParseYelp {
 		{
 		    FileWriter writer1 = new FileWriter("data/funny_exp.csv");
 		    FileWriter writer2 = new FileWriter("data/not_funny_exp.csv");
-		    putHeader(writer1);
-		    putHeader(writer2);
+		    //putHeader(writer1);
+		    //putHeader(writer2);
 		    
 			ReviewStat st = new ReviewStat(data);
 			HashMap<String, String> userScoreMap = st.getAvgScoreAndStd(1);
