@@ -23,8 +23,7 @@ public class ReviewDataReader implements Parser {
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(funnyRevs)));
             String str = br.readLine();
-            str = br.readLine();
-            int cnt = 0;
+            //str = br.readLine();
     		while (str != null) {
             	//System.out.println("funny:" + str);
             	String[] temp = str.split(",");
@@ -34,34 +33,24 @@ public class ReviewDataReader implements Parser {
     			String bid = temp[l-4];
     			String uStat = temp[l-6] + "," + temp[l-5];
     			String uid = temp[l-7];
-    			/*if (cnt >= 189 && cnt <= 192)
-    				System.out.println("vote:" + temp[l-8]);*/
     			int hvotes = Integer.parseInt(temp[l-8]);
-    			/*if (cnt >= 189 && cnt <= 192)
-    				System.out.println("vote:" + hvotes);*/
+
     			StringBuffer s = new StringBuffer();
     			for (int i = 0; i <= l-9; i ++){
     				s.append(temp[i]);
     			}
     			String review = s.toString();
-    			
     			ReviewJ r = new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time);
     			lines.add(r);
-    			/*if (cnt >= 189 && cnt <= 192){
-    			System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
-    					+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
-    			}
-            	lines.add(new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time));*/
+    			//System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
+    			//		+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
+            	/*lines.add(new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time));*/
             	str = br.readLine();
-            	//System.out.println(cnt);
-            	cnt ++;
             }
-    		System.out.println(funnyRevs + cnt);
             br.close();
             br = new BufferedReader(new InputStreamReader(new FileInputStream(notFunnyRevs)));
             str = br.readLine();
-            str = br.readLine();
-            cnt = 0;
+            //str = br.readLine();
             while (str != null) {
             	//System.out.println("not funny:" + str);
             	String[] temp = str.split(",");
@@ -79,13 +68,10 @@ public class ReviewDataReader implements Parser {
     			String review = s.toString();
             	lines.add(new ReviewJ(review, "notFunny", hvotes, uid, uStat, bid, bStat, time ));
             	str = br.readLine();
-            	//System.out.println(cnt);
-            	cnt ++;
             }
-            System.out.println(notFunnyRevs + cnt);
             br.close();
         } catch (Exception e) {
-            System.out.println("exception!");
+            
         }
     }
     

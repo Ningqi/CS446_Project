@@ -27,19 +27,19 @@ import random
 
 # this program samples the funny reviews and not so funny reviews,
 # since there is a large inbalance of number of reviews we use sample size of 
-# 17000 set below, this would be adjusted to the number of funny reviews
-# thus in total there would be a 17000 funny reviews and 17000 not funny reviews
-# total of 34,000 reviews. From those we create training and testing datasets of
+# SAMPLE set below, this would be adjusted to the number of funny reviews
+# thus in total there would be a SAMPLE funny reviews and SAMPLE not funny reviews
+# total of 2*SAMPLE reviews. From those we create training and testing datasets of
 # equal size. The size of the training depends of the cross validation parameter
-# which is set to 5, but can be changed. Thus there are five chunks of 6800.
-SAMPLE=17000
-
+# which is set to 5, but can be changed. Thus there are five chunks of (2*SAMPLE)/5.
+SAMPLE=12000
+HOLD=5000
 def main(args):
 	if len(args) < 1:
 		print "Need at least one arguement"
 		return 0
 		
-	fraction = 0.2
+	fraction = 0.1
 	outputfile = "output_sample.txt"
 	outputdisj = "output_cleaned.txt"
 	print "arguments:"
@@ -55,7 +55,7 @@ def main(args):
 	
 	sampleFiles = random.sample(lines, sampleSize)
 	print sampleFiles[0]
-	sys.exit(0)
+	
 	with open(outputfile, 'w') as f:
 		f.writelines(sampleFiles)
 	
@@ -71,7 +71,7 @@ def cross_validation(args):
 		print "inputformat: <funny_reviews> <not_funny_reviews>"
 		return 0
 	
-	path_to_cv_output = "data/cv/"
+	path_to_cv_output = "../data/cv/"
 	folds = 5
 	funny=args[0]
 	notfunny=args[1]
@@ -80,8 +80,19 @@ def cross_validation(args):
 	init_notfunny = []
 
 	with open(funny) as f:
+		hold_the_sauce = []
+		held_out_set = []
 		funny_conts = f.readlines()
+		hold_the_sauce  = random.sample(range(len(funny_conts)), HOLD)
+		for i, item in enumerate(funny_conts):
+			if i in hold_the_sauce:
+				held_out_set.append(str(i) + "," + item)
+
+		funny_conts = list( set(funny_conts) - set(held_out_set) )
 		init_funny = random.sample(funny_conts, SAMPLE )
+
+		with open(path_to_cv_output + "hold_out_set.txt", 'w') as orderUp:
+			orderUp.writelines(held_out_set)
 	
 	with open(notfunny) as f:
 		notfunny_conts = f.readlines()
@@ -93,23 +104,24 @@ def cross_validation(args):
 	notfunny_training= path_to_cv_output+"notfunny_training_sample_"
 	funny_testing = path_to_cv_output+"funny_testing_sample_"
 	notfunny_testing = path_to_cv_output+"notfunny_testing_sample_"
+	suffix = ".txt"
 
 	i = 0
 	for funny_t, funny_v in k_fold_cross_validation(init_funny, folds):
 		i = i + 1
-		with open(funny_training + str(i) + ".txt", 'w') as f:
+		with open(funny_training + str(i) + suffix, 'w') as f:
 			f.writelines(funny_t)
 			
-		with open(funny_testing + str(i) + ".txt", 'w') as f:
+		with open(funny_testing + str(i) + suffix, 'w') as f:
 			f.writelines(funny_v)
 
 	i = 0
 	for notfunny_t, notfunny_v in k_fold_cross_validation(init_notfunny, folds):
 		i = i + 1
-		with open(notfunny_training + str(i) + ".txt", 'w') as f:
+		with open(notfunny_training + str(i) + suffix, 'w') as f:
 			f.writelines(notfunny_t)
 			
-		with open(notfunny_testing + str(i) + ".txt", 'w') as f:
+		with open(notfunny_testing + str(i) + suffix, 'w') as f:
 			f.writelines(notfunny_v)
 	
 def k_fold_cross_validation(items, k, randomize=False):
@@ -126,5 +138,5 @@ def k_fold_cross_validation(items, k, randomize=False):
 		
 
 if __name__ == '__main__':
-	main(sys.argv[1:])
-	#cross_validation(sys.argv[1:])
+	#main(sys.argv[1:])
+	cross_validation(sys.argv[1:])
