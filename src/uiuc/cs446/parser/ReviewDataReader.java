@@ -23,7 +23,7 @@ public class ReviewDataReader implements Parser {
         try {
             br = new BufferedReader(new InputStreamReader(new FileInputStream(funnyRevs)));
             String str = br.readLine();
-            str = br.readLine();
+            //str = br.readLine();
     		while (str != null) {
             	//System.out.println("funny:" + str);
             	String[] temp = str.split(",");
@@ -42,15 +42,15 @@ public class ReviewDataReader implements Parser {
     			String review = s.toString();
     			ReviewJ r = new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time);
     			lines.add(r);
-    			System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
-    					+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
+    			//System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
+    			//		+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
             	/*lines.add(new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time));*/
             	str = br.readLine();
             }
             br.close();
             br = new BufferedReader(new InputStreamReader(new FileInputStream(notFunnyRevs)));
             str = br.readLine();
-            str = br.readLine();
+            //str = br.readLine();
             while (str != null) {
             	//System.out.println("not funny:" + str);
             	String[] temp = str.split(",");
