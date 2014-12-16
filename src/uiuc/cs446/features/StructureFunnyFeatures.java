@@ -1,23 +1,48 @@
 package uiuc.cs446.features;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
+
+import uiuc.cs446.parser.ParseWikiReference;
 import edu.smu.tspell.wordnet.*;
 
 public class StructureFunnyFeatures {
 	private WordNetDatabase database;
 	private CMUdict dict;
-	
+	private static List<String> stop_words;
 	
 	public static void main(String[] args){
 		StructureFunnyFeatures sff = new StructureFunnyFeatures();
 		
-		System.out.println(sff.wordFormTypes("moon"));
-		System.out.println(sff.wordFormTypes("sun"));
-		System.out.println(sff.alliteration("great green greenery scenery"));
+		//System.out.println(sff.wordFormTypes("moon"));
+		//System.out.println(sff.wordFormTypes("sun"));
+		//System.out.println(sff.alliteration("great green greenery scenery"));
+		//for( String word : StructureFunnyFeatures.stop_words ){
+		//	System.out.println(word);
+		//}
+		String text = " This is a sentence. This is another sentence 2.";
+		for (String sentence : ParseWikiReference.getSentences(text)){
+			System.out.println(sentence);
+		}
+		
+	}
+	
+	public static List<String> stopWords(){
+		List<String> stop_list = null;
+		try {
+			stop_list = FileUtils.readLines(new File("data/stop_words.txt"), "utf-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return stop_list;
 	}
 	
 	public StructureFunnyFeatures(){
@@ -29,6 +54,7 @@ public class StructureFunnyFeatures {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
+		stop_words = StructureFunnyFeatures.stopWords();
 	}
 	
 	//This extracts the alliteration chains in the sentence for example

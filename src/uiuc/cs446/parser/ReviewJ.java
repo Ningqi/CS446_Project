@@ -1,4 +1,5 @@
 package uiuc.cs446.parser;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,7 +13,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	private static final StructureFunnyFeatures sff = new StructureFunnyFeatures();
 	private String text;
 	private int helpfulVotes;
-	private ArrayList<String> sentences; // TODO: need to find a good way to split on sentences.
+	private ArrayList<String> sentences; // split on sentences, stopped words removed.
 	private String label; 
 	private String userId;
 	private String businessId;
@@ -99,6 +100,8 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		}*/
 		
 	}
+	
+	
 	
 	public double lexicalAmbiguity(){
 		double lexical_score = 0;

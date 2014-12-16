@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -23,6 +24,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import uiuc.cs446.features.StructureFunnyFeatures;
+
 public class ParseWikiReference {
 	public static final String dataFile = "data/cv/hold_out_set.txt";
 	public static final String pathToWikiRef = "data/funnyEntitiesOutput/";
@@ -34,12 +37,20 @@ public class ParseWikiReference {
 	public static final Pattern re = Pattern.compile("[^.!?\\s][^.!?]*(?:[.!?](?!['\"]?\\s|$)[^.!?]*)*[.!?]?['\"]?(?=\\s|$)", Pattern.MULTILINE | Pattern.COMMENTS);
     
 	public static ArrayList<String> getSentences(String text){
-    	ArrayList ret = new ArrayList<String> ();
+    	ArrayList<String> ret = new ArrayList<String> ();
+    	List<String> stops = StructureFunnyFeatures.stopWords();
     	Matcher reMatcher = ParseWikiReference.re.matcher(text);
         
         while (reMatcher.find()) 
         {
-        	ret.add(reMatcher.group());
+        	String temp = reMatcher.group();
+        	String output = "";
+        	for (String word : temp.split("\\s+")){
+        		if (!word.equals( "") &&  !stops.contains(word.toLowerCase())){
+        			output += word + " ";
+        		}
+        	}
+        	ret.add(output.trim());
             //System.out.println(reMatcher.group());
         }
     	return ret;
@@ -115,7 +126,7 @@ public class ParseWikiReference {
 			HashMap<String, Integer> categories_of_entities = new HashMap<String, Integer>();
 			while (str != null /*&& ittr > 0*/) {
 				String[] temp = str.split(",");
-            	System.out.println("idx: " + temp[0] );
+            	//System.out.println("idx: " + temp[0] );
             		
             	String[][] wiki_ents = ParseWikiReference.getWikiEntities(temp[0]);
             	String[] a_list = wiki_ents[0];
