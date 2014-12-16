@@ -90,15 +90,6 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 			System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
 					+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
 		}
-		/*for(ReviewJ rj : data){
-			System.out.println(rj.funnyVotes);
-		}
-		Collections.sort(data);
-		
-		System.out.println("sorted:");
-		for(ReviewJ rj : data){
-			System.out.println(rj.funnyVotes);
-		}*/
 		
 	}
 	

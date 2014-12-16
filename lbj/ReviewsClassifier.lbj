@@ -100,9 +100,10 @@ discrete ReviewLabel(ReviewJ d) <- { return d.getLabel(); }
 /** A learned review classifier; its definition comes from data. */
 discrete ReviewsClassifier(ReviewJ review) <-
 learn ReviewLabel
-  using MatchedEntitiesFeatures
-  from new ReviewDataReader("data/cv/funny_training_sample_1.txt", "data/cv/notfunny_training_sample_1.txt")
-  5 rounds
+  using WordFeatures
+  //from new ReviewDataReader("data/cv/funny_training_sample_1.txt", "data/cv/notfunny_training_sample_1.txt")
+  from new ReviewDataReader("data/cv/full_reviews.txt")
+  //5 rounds
 
   with new NaiveBayes()
   /*
@@ -114,6 +115,7 @@ learn ReviewLabel
      baseLTU = new SparseAveragedPerceptron(p);
   }
   */
-  testFrom new ReviewDataReader("data/cv/funny_testing_sample_1.txt", "data/cv/notfunny_testing_sample_1.txt") 
-  progressOutput 2000
+  //testFrom new ReviewDataReader("data/cv/funny_testing_sample_1.txt", "data/cv/notfunny_testing_sample_1.txt")
+  cval 5 "kth"
+  //progressOutput 2000
 end

@@ -131,6 +131,50 @@ def cross_validation(args):
 		with open(notfunny_testing + str(i) + suffix, 'w') as f:
 			f.writelines(notfunny_v)
 	
+def cross_validation_v2(args):
+	if len(args) < 2:
+		print "inputformat: <funny_reviews> <not_funny_reviews>"
+		return 0
+	
+	path_to_cv_output = "data/cv/"
+	folds = 5
+	funny=args[0]
+	notfunny=args[1]
+
+	init_funny = []
+	init_notfunny = []
+
+	with open(funny) as f:
+		hold_the_sauce = []
+		held_out_set = []
+		#funny_conts = f.readlines()
+		funny_conts = []
+		funny_cunt = f.readlines()
+		hold_the_sauce  = random.sample(range(len(funny_cunt)), HOLD)
+		label = "0"
+		for i, item in enumerate(funny_cunt):
+			if i in hold_the_sauce:
+				held_out_set.append(str(i) + "," + item)
+			else:
+				funny_conts.append(label + "," + item)
+
+		funny_conts = list( set(funny_conts) - set(held_out_set) )
+		init_funny = random.sample(funny_conts, SAMPLE )
+
+		with open(path_to_cv_output + "hold_out_set_v2.txt", 'w') as orderUp:
+			orderUp.writelines(held_out_set)
+	
+	with open(notfunny) as f:
+		notfunny_conts = []
+		label = "1"
+		for i,line in enumerate(f.readlines()):
+			notfunny_conts.append(label+ "," + line)
+
+		init_notfunny = random.sample(notfunny_conts, SAMPLE )
+
+	with open(path_to_cv_output + "full_reviews.txt", 'w') as f:
+		f.writelines(init_funny + init_notfunny)
+
 def k_fold_cross_validation(items, k, randomize=False):
 	if randomize:
 		items = list(items)
@@ -146,4 +190,4 @@ def k_fold_cross_validation(items, k, randomize=False):
 
 if __name__ == '__main__':
 	#main(sys.argv[1:])
-	cross_validation(sys.argv[1:])
+	cross_validation_v2(sys.argv[1:])

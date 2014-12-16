@@ -36,7 +36,7 @@ public class ReviewDataReader implements Parser {
     			int hvotes = Integer.parseInt(temp[l-8]);
 
     			StringBuffer s = new StringBuffer();
-    			for (int i = 0; i <= l-9; i ++){
+    			for (int i = 1; i <= l-9; i ++){
     				s.append(temp[i]);
     			}
     			String review = s.toString();
@@ -62,7 +62,7 @@ public class ReviewDataReader implements Parser {
     			String uid = temp[l-7];
     			int hvotes = Integer.parseInt(temp[l-8]);
     			StringBuffer s = new StringBuffer();
-    			for (int i = 0; i <= l-9; i ++){
+    			for (int i = 1; i <= l-9; i ++){
     				s.append(temp[i]);
     			}
     			String review = s.toString();
@@ -71,7 +71,45 @@ public class ReviewDataReader implements Parser {
             }
             br.close();
         } catch (Exception e) {
-            
+            e.printStackTrace();
+        }
+    }
+    
+    public ReviewDataReader(String reviewFile) {
+    	
+        lines = new ArrayList<ReviewJ>();
+        try {
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(reviewFile)));
+            String str = br.readLine();
+            //str = br.readLine();
+    		while (str != null) {
+            	//System.out.println("funny:" + str);
+            	String[] temp = str.split(",");
+            	int l = temp.length; 
+    			String time = temp[l-1];
+    			String bStat = temp[l-3] + "," + temp[l-2];
+    			String bid = temp[l-4];
+    			String uStat = temp[l-6] + "," + temp[l-5];
+    			String uid = temp[l-7];
+    			int hvotes = Integer.parseInt(temp[l-8]);
+    			int label = Integer.valueOf(temp[0]);
+    			
+    			StringBuffer s = new StringBuffer();
+    			for (int i = 1; i <= l-9; i ++){
+    				s.append(temp[i]);
+    			}
+    			String review = s.toString();
+    			String funny_or_not = (label == 0)? "funny":"notFunny";
+    			ReviewJ r = new ReviewJ(review, funny_or_not, hvotes, uid, uStat, bid, bStat, time);
+    			lines.add(r);
+    			//System.out.println(r.getText() + "," + r.getLabel()+ "," + r.getHelpfulVotes() + "," + r.getUserId() + ","
+    			//		+ r.getUserStat() + "," + r.getBid() + "," + r.getBusinessStat() + "," + r.getTime() );
+            	/*lines.add(new ReviewJ(review, "funny", hvotes, uid, uStat, bid, bStat, time));*/
+            	str = br.readLine();
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
