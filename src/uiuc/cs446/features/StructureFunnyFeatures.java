@@ -14,6 +14,7 @@ public class StructureFunnyFeatures {
 	
 	public static void main(String[] args){
 		StructureFunnyFeatures sff = new StructureFunnyFeatures();
+		
 		System.out.println(sff.wordFormTypes("moon"));
 		System.out.println(sff.wordFormTypes("sun"));
 		System.out.println(sff.alliteration("great green greenery scenery"));
@@ -77,6 +78,8 @@ public class StructureFunnyFeatures {
 		return chains;
 	}
 	
+	
+	// returns the avereage ambiguity score for the words in the sentences
 	public double ambiguity(String sentence){
 		int score = 0;
 		String[] words = sentence.split("\\s");

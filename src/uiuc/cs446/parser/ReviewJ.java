@@ -33,6 +33,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	
 	public ReviewJ(String body, String l){
 		this.setText(new String(body));
+		this.sentences = ParseWikiReference.getSentences(body);
 		this.label = l;
 		this.funnyVotes = -1;
 		this.helpfulVotes = -1;
@@ -44,7 +45,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		this.setText(new String(body));
 		this.funnyVotes = fvotes;
 		this.helpfulVotes = hvotes;
-		this.sentences = cat;
+		this.sentences = ParseWikiReference.getSentences(body);
 		this.label = l;
 		this.userId = uid;
 		this.businessId = bid;
@@ -54,6 +55,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	
 	public ReviewJ(String body, String l, int helpfulVotes, String userId, String uStat, String bid, String bStat, String time){
 		this.setText(new String(body));
+		this.sentences = ParseWikiReference.getSentences(body);
 		this.label = l;
 		this.helpfulVotes = helpfulVotes;
 		this.userId = userId;
@@ -96,6 +98,22 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 			System.out.println(rj.funnyVotes);
 		}*/
 		
+	}
+	
+	public double lexicalAmbiguity(){
+		double lexical_score = 0;
+		for (String sentence : this.sentences){
+			lexical_score += sff.ambiguity(sentence);
+		}
+		return lexical_score/(1.0*this.sentences.size());
+	}
+	
+	public int alliterationChains(){
+		int chains = 0;
+		for (String sentence : this.sentences){
+			chains += sff.alliteration(sentence);
+		}
+		return chains;
 	}
 
 	public String getText() {

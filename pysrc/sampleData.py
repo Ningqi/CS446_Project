@@ -71,7 +71,7 @@ def cross_validation(args):
 		print "inputformat: <funny_reviews> <not_funny_reviews>"
 		return 0
 	
-	path_to_cv_output = "../data/cv/"
+	path_to_cv_output = "data/cv/"
 	folds = 5
 	funny=args[0]
 	notfunny=args[1]
