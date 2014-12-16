@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,6 +31,19 @@ public class ParseWikiReference {
 	public static final String nerName = ".NER.tagged";
 	public static final String wikiName = ".wikification.tagged.flat.html";
 	public static final String wikifull = ".wikification.tagged.full.xml";
+	public static final Pattern re = Pattern.compile("[^.!?\\s][^.!?]*(?:[.!?](?!['\"]?\\s|$)[^.!?]*)*[.!?]?['\"]?(?=\\s|$)", Pattern.MULTILINE | Pattern.COMMENTS);
+    
+	public static ArrayList<String> getSentences(String text){
+    	ArrayList ret = new ArrayList<String> ();
+    	Matcher reMatcher = ParseWikiReference.re.matcher(text);
+        
+        while (reMatcher.find()) 
+        {
+        	ret.add(reMatcher.group());
+            //System.out.println(reMatcher.group());
+        }
+    	return ret;
+    }
 	
 	public static String[][] getWikiEntities( String idx ) throws IOException {
 		
