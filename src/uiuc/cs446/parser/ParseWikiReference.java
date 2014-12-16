@@ -19,6 +19,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -35,10 +36,40 @@ public class ParseWikiReference {
 	public static final String wikiName = ".wikification.tagged.flat.html";
 	public static final String wikifull = ".wikification.tagged.full.xml";
 	public static final Pattern re = Pattern.compile("[^.!?\\s][^.!?]*(?:[.!?](?!['\"]?\\s|$)[^.!?]*)*[.!?]?['\"]?(?=\\s|$)", Pattern.MULTILINE | Pattern.COMMENTS);
-    
+	public static final List<String> stops = ParseWikiReference.stopWords();
+	public static final List<String> entities = ParseWikiReference.topEntities();
+	
+	public static List<String> stopWords(){
+		List<String> stop_list = null;
+		try {
+			stop_list = FileUtils.readLines(new File("data/stop_words.txt"), "utf-8");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return stop_list;
+	}
+	
+	public static List<String> topEntities(){
+		List<String> ret = new ArrayList<String> ();
+		List<String> myEnts = new ArrayList<String>();
+		try {
+			ret = FileUtils.readLines(new File("data/top_100_entities.txt"), "utf-8");
+			for (String item: ret){
+				myEnts.add(item.split(",")[0].trim());
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.exit(-1);
+		}
+		return myEnts;
+	}
+	
+	
 	public static ArrayList<String> getSentences(String text){
     	ArrayList<String> ret = new ArrayList<String> ();
-    	List<String> stops = StructureFunnyFeatures.stopWords();
     	Matcher reMatcher = ParseWikiReference.re.matcher(text);
         
         while (reMatcher.find()) 

@@ -84,6 +84,13 @@ discrete HelpfulVotesFeatures(ReviewJ review) <- {
 	return votes;
 }
 
+discrete % MatchedEntitiesFeatures(ReviewJ review) <- {
+	List overlaps = review.getOverlap();
+	for (int i = 0; i < overlaps.size(); i++){
+    	sense overlaps.get(i);
+    }
+}
+
 real LexicalAmbiguity(ReviewJ review) <- { return review.lexicalAmbiguity(); }
 
 discrete AlliterationChains(ReviewJ review) <- { return review.alliterationChains(); }
@@ -93,7 +100,7 @@ discrete ReviewLabel(ReviewJ d) <- { return d.getLabel(); }
 /** A learned review classifier; its definition comes from data. */
 discrete ReviewsClassifier(ReviewJ review) <-
 learn ReviewLabel
-  using WordFeatures
+  using MatchedEntitiesFeatures
   from new ReviewDataReader("data/cv/funny_training_sample_1.txt", "data/cv/notfunny_training_sample_1.txt")
   5 rounds
 

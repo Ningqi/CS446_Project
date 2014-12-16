@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
+//import org.apache.commons.io.FileUtils;
 
 import uiuc.cs446.parser.ParseWikiReference;
 import edu.smu.tspell.wordnet.*;
@@ -15,7 +15,8 @@ import edu.smu.tspell.wordnet.*;
 public class StructureFunnyFeatures {
 	private WordNetDatabase database;
 	private CMUdict dict;
-	private static List<String> stop_words;
+	private static List<String> stop_words = ParseWikiReference.stopWords();
+	//private static ParseWikiReference pwr = new ParseWikiReference();
 	
 	public static void main(String[] args){
 		StructureFunnyFeatures sff = new StructureFunnyFeatures();
@@ -26,23 +27,16 @@ public class StructureFunnyFeatures {
 		//for( String word : StructureFunnyFeatures.stop_words ){
 		//	System.out.println(word);
 		//}
-		String text = " This is a sentence. This is another sentence 2.";
-		for (String sentence : ParseWikiReference.getSentences(text)){
-			System.out.println(sentence);
+		//String text = " This is a sentence. This is another sentence 2.";
+		//for (String sentence : ParseWikiReference.getSentences(text)){
+		//	System.out.println(sentence);
+		//}
+		ArrayList<String> sentences = new ArrayList<String>();
+		sentences.add("something place place person");
+		sentences.add("blah blah company person");
+		for (int item: StructureFunnyFeatures.overlappingEntities(sentences)){
+			System.out.println(item);
 		}
-		
-	}
-	
-	public static List<String> stopWords(){
-		List<String> stop_list = null;
-		try {
-			stop_list = FileUtils.readLines(new File("data/stop_words.txt"), "utf-8");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(-1);
-		}
-		return stop_list;
 	}
 	
 	public StructureFunnyFeatures(){
@@ -54,7 +48,29 @@ public class StructureFunnyFeatures {
 		}catch (Exception e){
 			e.printStackTrace();
 		}
-		stop_words = StructureFunnyFeatures.stopWords();
+		
+	}
+	
+	public static ArrayList<Integer> overlappingEntities(ArrayList<String> sentences){
+		int unique = 0;
+		int count = 0;
+		List<String> entities = ParseWikiReference.topEntities();
+		List<String> overlap = new ArrayList<String>();
+		for( String sentence : sentences){
+			for( String word : sentence.split("\\s+")){
+				if (entities.contains(word.trim())){
+					if( !overlap.contains(word)){
+						overlap.add(word);
+						unique++;
+					}
+					count++;
+				}
+			}
+		}
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+		ret.add(count);
+		ret.add(unique);
+		return ret;
 	}
 	
 	//This extracts the alliteration chains in the sentence for example

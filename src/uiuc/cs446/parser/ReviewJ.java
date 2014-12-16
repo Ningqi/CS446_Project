@@ -23,6 +23,7 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 	private String businessStat;
 	public int funnyVotes;
 	
+	
 	/*
 	 * sorts based on largest to smallest.
 	 */
@@ -101,7 +102,9 @@ public final class ReviewJ implements Comparable<ReviewJ>{
 		
 	}
 	
-	
+	public ArrayList<Integer> getOverlap(){
+		return StructureFunnyFeatures.overlappingEntities(this.sentences);
+	}
 	
 	public double lexicalAmbiguity(){
 		double lexical_score = 0;
